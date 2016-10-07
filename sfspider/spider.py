@@ -31,4 +31,9 @@ class SFQuestionSpider(object):
         answer_elements = self.dom('.answer.fmt').items()
         return list(map(lambda element: element.html(), answer_elements))
 
-    
+    @property
+    def tags(self):
+        tag_elements = self.dom('.tagPopup.mb5 > a').items()
+        return list(
+            map(lambda element: element.text(), tag_elements)
+        )
