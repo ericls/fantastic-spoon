@@ -38,3 +38,48 @@ class SFQuestionSpider(object):
         return list(
             map(lambda element: element.text(), tag_elements)
         )
+
+
+class SFTagSpider(object):
+
+    def __init__(self, tag, page=1):
+        self.tag = tag
+        self.url = 'https://segmentfault.com/t/%s?type=newest&page=%s' % (
+            tag,
+            page
+        )
+        self.page = page
+        self._dom = None
+
+
+    @property
+    def dom(self):
+        if not self._dom:
+            d = requests.get(self.url)
+            d.encoding = 'utf-8'
+            self._dom = Pq(d.text)
+        return self._dom
+
+    @property
+    def has_next_page(self):
+        return bool(
+            self.dom('ul.pagination > li.next')
+        )
+
+    def next_page(self):
+        if self.has_next_page:
+            self.__init__(tag=self.tag, page=self.page + 1)
+            return self
+        else:
+            return
+
+    @property
+    def question_urls(self):
+        question_link_elements = self.dom(
+            'section.stream-list__item > div.summary > h2 > a'
+        ).items()
+        return list(
+            map(
+                lambda element: element.attr("href"), question_link_elements
+            )
+        )

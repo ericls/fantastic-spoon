@@ -1,5 +1,5 @@
 import unittest
-from spider import SFQuestionSpider
+from spider import SFQuestionSpider, SFTagSpider
 
 
 class QuestionSpiderTest(unittest.TestCase):
@@ -26,6 +26,27 @@ class QuestionSpiderTest(unittest.TestCase):
         self.assertEqual(
             self.spider.tags,
             ['mysql优化', 'mysql', 'php']
+        )
+
+
+
+class TagSpiderTest(unittest.TestCase):
+
+    def setUp(self):
+        self.spider = SFTagSpider('python')
+
+    def test_can_get_list_of_question_urls(self):
+        self.assertEqual(type(self.spider.question_urls), list)
+        self.assertEqual(len(self.spider.question_urls), 20)
+
+    def test_detect_next_page(self):
+        self.assertEqual(self.spider.has_next_page, True)
+
+    def test_go_next_page(self):
+        self.spider.next_page()
+        self.assertEqual(
+            'https://segmentfault.com/t/python?type=newest&page=2',
+            self.spider.url
         )
 
 
