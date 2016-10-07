@@ -1,5 +1,4 @@
 # -*- coding utf-8 -*-
-# TODO: Add tests
 from pyquery import PyQuery as Pq
 import requests
 
@@ -24,7 +23,9 @@ class SFQuestionSpider(object):
 
     @property
     def content(self):
-        return self.dom('.question.fmt').html() # TODO: Process this
+        return self.dom(
+            '.question.fmt'
+        ).html().strip() # TODO: Process this
 
     @property
     def answers(self):
