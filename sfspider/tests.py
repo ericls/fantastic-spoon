@@ -1,3 +1,9 @@
+import os
+os.environ.setdefault('SF_ENV', 'test')
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+manage_py = os.path.join(parent_dir, 'manage.py')
+os.system("python %s flush --no-input" % manage_py)
+
 import unittest
 from spider import SFQuestionSpider, SFTagSpider
 
@@ -28,6 +34,12 @@ class QuestionSpiderTest(unittest.TestCase):
             ['mysql优化', 'mysql', 'php']
         )
 
+    def test_save(self):
+        saved_question = self.spider.save()
+        self.assertEqual(
+            saved_question.sf_id,
+            self.spider.id
+        )
 
 
 class TagSpiderTest(unittest.TestCase):
